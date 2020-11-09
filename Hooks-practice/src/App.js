@@ -1,30 +1,28 @@
-import React, { useState } from "react";
-import "./styles.css";
+import React, { useState, useEffect, useRef } from "react";
 
-const useInput = (i, validator) => {
-  const [value, setValue] = useState(i);
-  const onChange = (e) => {
-    const {
-      target: { value }
-    } = e;
-  };
-  let willUpdate = true;
-  console.log(validator.value);
-  if (typeof validator === "Function") {
-    willUpdate = validator(value);
-  }
-  if (willUpdate) {
-    return { value, onChange };
-  }
-};
+const useClick = (onClick) => {
+  const element = useRef();
+  useEffect(() => {
+    if(element.current) {
+      element.current.addEventListener("click", onClick);
+    }
+    return () => {
+      if (element.current) {
+        element.current.removeEventListener("click", onClick);
+      }
+    }
+  }, []);
+  return element;
+}
 
-export default function App() {
-  const maxLen = (value) => value.length < 10;
-  const name = useInput("Mr.", maxLen);
+const App = () => {
+  const sayHello = () => console.log("say hello");
+  const title = useClick(sayHello);
   return (
     <div className="App">
-      <h1>Hello </h1>
-      <input placeholder="Name" {...name} />
+      <h1 ref={title}>Hi</h1>
     </div>
   );
-}
+};
+
+export default App;
