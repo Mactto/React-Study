@@ -1,26 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const useClick = (onClick) => {
+const useFadeIn = (duration = 1, delay) => {
   const element = useRef();
   useEffect(() => {
-    if(element.current) {
-      element.current.addEventListener("click", onClick);
-    }
-    return () => {
-      if (element.current) {
-        element.current.removeEventListener("click", onClick);
-      }
+    if (element.current) {
+      const {current} = element;
+      current.style.transition = `opacity ${duration}s ease-in ${delay}s`;
+      current.style.opacity = 1;
     }
   }, []);
-  return element;
+  return {ref: element, style: {opacity:0}};
 }
 
 const App = () => {
-  const sayHello = () => console.log("say hello");
-  const title = useClick(sayHello);
+  const fadeInH1 = useFadeIn(1, 2);
+  const fadeInP = useFadeIn(5, 10);
   return (
     <div className="App">
-      <h1 ref={title}>Hi</h1>
+      <h1 {...fadeInH1}> hello </h1>
+      <p {...fadeInP}>lalalalala</p>
     </div>
   );
 };
