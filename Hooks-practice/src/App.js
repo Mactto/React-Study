@@ -1,26 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const useScroll = () => {
-  const [state, setState] = useState({
-    x: 0,
-    y: 0
-  });
-  const onScroll = () => {
-    console.log(window.scrollX + ", " + window.scrollY);
+const useFullScreen = () => {
+  const element = useRef();
+  const makeFull = () => {
+    element.current.requestFullscreen();
   };
-  useEffect(() => {
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-  return state;
-};
+  const makeSmall = () => {
+    document.exitFullscreen();
+  }
+
+  return {element, makeFull, makeSmall}
+}
 
 const App = () => {
-  const { y } = useScroll();
-  console.log(y);
+  const {element, makeFull, makeSmall} = useFullScreen();
   return (
     <div className="App" style = {{height: "1000vh"}}>
-      <h1 style={{position: "fixed", color:  y > 100 ? "red" : "blue"}}>hello</h1>
+      <div ref={element}>
+        <image src="C:\Users\mactt\OneDrive\바탕 화면\아이템\MimeMan.jpg"/>
+      </div>
+      <button onClick={makeFull}>make full</button>
+      <button onClick={makeSmall}>make small</button>
     </div>
   );
 };
