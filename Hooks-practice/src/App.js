@@ -1,24 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const useFadeIn = (duration = 1, delay) => {
-  const element = useRef();
+const useScroll = () => {
+  const [state, setState] = useState({
+    x: 0,
+    y: 0
+  });
+  const onScroll = () => {
+    console.log(window.scrollX + ", " + window.scrollY);
+  };
   useEffect(() => {
-    if (element.current) {
-      const {current} = element;
-      current.style.transition = `opacity ${duration}s ease-in ${delay}s`;
-      current.style.opacity = 1;
-    }
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  return {ref: element, style: {opacity:0}};
-}
+  return state;
+};
 
 const App = () => {
-  const fadeInH1 = useFadeIn(1, 2);
-  const fadeInP = useFadeIn(5, 10);
+  const { y } = useScroll();
+  console.log(y);
   return (
-    <div className="App">
-      <h1 {...fadeInH1}> hello </h1>
-      <p {...fadeInP}>lalalalala</p>
+    <div className="App" style = {{height: "1000vh"}}>
+      <h1 style={{position: "fixed", color:  y > 100 ? "red" : "blue"}}>hello</h1>
     </div>
   );
 };
